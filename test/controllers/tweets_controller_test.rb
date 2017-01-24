@@ -3,10 +3,10 @@ require 'webmock/test_unit'
 
 class TweetsControllerTest < ActionDispatch::IntegrationTest
   # Given no Tweet with uid "250075927172759552"
-  #       a Tweet with uid "123" for user 'test_user'
-  #       a response for 'recent tweets of user @test_user' request containing one tweet
-  # When listing the tweets of user "@test_user"
-  # Then a tweet with uid "250075927172759552" must be created for the existing user
+  #       a Tweet with uid "123" mentioning user 'test_user' created by user 'user'
+  #       a response for 'recent tweets mentioning user @test_user' request containing one tweet
+  # When listing the tweets that mention user "@test_user"
+  # Then a tweet with uid "250075927172759552" must be created for the existing user 'user'
   test "should create one tweet for existing user" do
     # Arrange
     WebMock.stub_request(:post, "https://api.twitter.com/oauth2/token").
@@ -14,7 +14,7 @@ class TweetsControllerTest < ActionDispatch::IntegrationTest
 
     WebMock.stub_request(:get, "https://api.twitter.com/1.1/users/show.json").
       with(query: {'screen_name': 'test_user'}).
-      to_return(:status => 200, :body => "{ \"id\": 1 }", :headers => {})
+      to_return(:status => 200, :body => "{ \"id\": 999 }", :headers => {})
 
     WebMock.stub_request(:get, "https://api.twitter.com/1.1/search/tweets.json").
       with(query: {'q': '@test_user', 'count': 1, 'result_type': 'recent'}).
@@ -32,8 +32,8 @@ class TweetsControllerTest < ActionDispatch::IntegrationTest
 
   # Given no Tweet with uid "250075927172759552"
   #       no User with uid "2500"
-  #       a response for 'recent tweets of user @test_user2' request containing one tweet
-  # When listing the tweets of user "@test_user2"
+  #       a response for 'recent tweets mentioning user @test_user' request containing one tweet
+  # When listing the tweets that mention user "@test_user"
   # Then a user with uid "2500" must be created
   #      a tweet with uid "250075927172759552" must be created for created user
   test "should create one tweet for new user" do
@@ -42,15 +42,15 @@ class TweetsControllerTest < ActionDispatch::IntegrationTest
       to_return(:status => 200, :body => "", :headers => {})
 
     WebMock.stub_request(:get, "https://api.twitter.com/1.1/users/show.json").
-      with(query: {'screen_name': 'test_user2'}).
-      to_return(:status => 200, :body => "{ \"id\": 2500}", :headers => {})
+      with(query: {'screen_name': 'test_user'}).
+      to_return(:status => 200, :body => "{ \"id\": 999}", :headers => {})
 
     WebMock.stub_request(:get, "https://api.twitter.com/1.1/search/tweets.json").
-      with(query: {'q': '@test_user2', 'count': 1, 'result_type': 'recent'}).
+      with(query: {'q': '@test_user', 'count': 1, 'result_type': 'recent'}).
       to_return(body: file_fixture('twitter_api_response_body_one_tweet_new_user.json').read)
 
     # Act
-    get tweets_list_url, params: {username: "test_user2"}
+    get tweets_list_url, params: {username: "test_user"}
 
     # Assert
     assert_response :success
@@ -58,13 +58,13 @@ class TweetsControllerTest < ActionDispatch::IntegrationTest
     assert_equal 1, User.where(uid: "2500").count
     user = User.where(uid: "2500").first
     assert_equal "2500", user.uid
-    assert_equal "test_user2", user.screen_name
+    assert_equal "user2", user.screen_name
     assert_equal 23, user.followers_count
   end
 
   # Given a Tweet with uid "123"
-  #       a response for 'recent tweets of user @test_user' request containing one tweet
-  # When listing the tweets of user "@test_user"
+  #       a response for 'recent tweets mentioning user @test_user' request containing one tweet
+  # When listing the tweets that mention user "@test_user"
   # Then the tweet must be updated (just the total retweets and total likes)
   test "should update the tweet" do
     # Arrange
@@ -73,7 +73,7 @@ class TweetsControllerTest < ActionDispatch::IntegrationTest
 
     WebMock.stub_request(:get, "https://api.twitter.com/1.1/users/show.json").
       with(query: {'screen_name': 'test_user'}).
-      to_return(:status => 200, :body => "{ \"id\": 1 }", :headers => {})
+      to_return(:status => 200, :body => "{ \"id\": 999 }", :headers => {})
 
     WebMock.stub_request(:get, "https://api.twitter.com/1.1/search/tweets.json").
       with(query: {'q': '@test_user', 'count': 1, 'result_type': 'recent'}).
@@ -93,8 +93,8 @@ class TweetsControllerTest < ActionDispatch::IntegrationTest
   end
 
   # Given an User with uid "123"
-  #       a response for 'recent tweets of user @test_user_updated' request containing one tweet
-  # When listing the tweets of user "@test_user_updated"
+  #       a response for 'recent tweets mentioning user @test_user' request containing one tweet
+  # When listing the tweets that mention user "@test_user"
   # Then the user must be updated (just the screen name and total followers)
   test "should update the user" do
     # Arrange
@@ -102,30 +102,30 @@ class TweetsControllerTest < ActionDispatch::IntegrationTest
       to_return(:status => 200, :body => "", :headers => {})
 
     WebMock.stub_request(:get, "https://api.twitter.com/1.1/users/show.json").
-      with(query: {'screen_name': 'test_user_updated'}).
-      to_return(:status => 200, :body => "{ \"id\": 1 }", :headers => {})
+      with(query: {'screen_name': 'test_user'}).
+      to_return(:status => 200, :body => "{ \"id\": 999 }", :headers => {})
 
     WebMock.stub_request(:get, "https://api.twitter.com/1.1/search/tweets.json").
-      with(query: {'q': '@test_user_updated', 'count': 1, 'result_type': 'recent'}).
+      with(query: {'q': '@test_user', 'count': 1, 'result_type': 'recent'}).
       to_return(body: file_fixture('twitter_api_response_body_one_tweet_update_user.json').read)
 
     # Act
-    get tweets_list_url, params: {username: "test_user_updated"}
+    get tweets_list_url, params: {username: "test_user"}
 
     # Assert
     assert_response :success
     assert_equal 1, User.where(uid: "1").count
     user = User.where(uid: "1").first
     assert_equal "1", user.uid
-    assert_equal "test_user_updated", user.screen_name
+    assert_equal "user2", user.screen_name
     assert_equal 23, user.followers_count
   end
 
-  # Given a response for 'recent tweets of user @test_user' request containing three tweets:
+  # Given a response for 'recent tweets mentioning user @test_user' request containing three tweets:
   #       The tweet "3030" that is a reply to "@test_user" and
   #       The tweet "3031" that is a reply to "@another_user" and
   #       The tweet "3032" that is not a reply
-  # When listing the tweets of user "@test_user"
+  # When listing the tweets that mention user "@test_user"
   # Then only tweets with uid "3031" and "3032" must be created
   test "should create one tweet if not a reply to given username" do
     # Arrange   
@@ -134,7 +134,7 @@ class TweetsControllerTest < ActionDispatch::IntegrationTest
 
     WebMock.stub_request(:get, "https://api.twitter.com/1.1/users/show.json").
       with(query: {'screen_name': 'test_user'}).
-      to_return(:status => 200, :body => "{ \"id\": 1 }", :headers => {})
+      to_return(:status => 200, :body => "{ \"id\": 999 }", :headers => {})
 
     WebMock.stub_request(:get, "https://api.twitter.com/1.1/search/tweets.json").
       with(query: {'q': '@test_user', 'count': 10, 'result_type': 'recent'}).
@@ -150,8 +150,8 @@ class TweetsControllerTest < ActionDispatch::IntegrationTest
     assert_equal 1, Tweet.where(uid: "3032").count
   end
 
-  # Given a response for '10 recent tweets of user @test_user' request
-  # When listing the 10 tweets of user "@test_user"
+  # Given a response for '10 recent tweets mentioning user @test_user' request
+  # When listing the 10 tweets that mention user "@test_user"
   # Then the response must me 200
   test "should consider username and count request parameters" do
     # Arrange
@@ -160,7 +160,7 @@ class TweetsControllerTest < ActionDispatch::IntegrationTest
 
     WebMock.stub_request(:get, "https://api.twitter.com/1.1/users/show.json").
       with(query: {'screen_name': 'test_user'}).
-      to_return(:status => 200, :body => "{ \"id\": 1 }", :headers => {})
+      to_return(:status => 200, :body => "{ \"id\": 999 }", :headers => {})
 
     WebMock.stub_request(:get, "https://api.twitter.com/1.1/search/tweets.json").
       with(query: {'q': '@test_user', 'count': 10, 'result_type': 'recent'}).
@@ -173,13 +173,13 @@ class TweetsControllerTest < ActionDispatch::IntegrationTest
     assert_response :success
   end
 
-  # Given a response for 'recent tweets of user @test_user' request containing some tweets:
+  # Given a response for 'recent tweets mentioning user @test_user' request containing some tweets:
   #       The tweet "3030" that is a tweet with 100 retweets, 10 likes and from a user with 300 followers
   #       The tweet "3031" that is a tweet with 100 retweets, 15 likes and from a user with 300 followers
   #       The tweet "3032" that is a tweet with 100 retweets, 10 likes and from a user with 350 followers
   #       The tweet "3033" that is a tweet with 200 retweets, 10 likes and from a user with 350 followers
   #       The tweet "3034" that is a tweet with 10 retweets, 2 likes and from a user with 400 followers
-  # When listing the tweets of user "@test_user"
+  # When listing the tweets that mention user "@test_user"
   # Then the tweets must be in the following order of uid "3034", "3033", "3032", "3031" and "3030"
   test "should retrieve tweets in a certain order" do
     # Arrange
@@ -188,7 +188,7 @@ class TweetsControllerTest < ActionDispatch::IntegrationTest
 
     WebMock.stub_request(:get, "https://api.twitter.com/1.1/users/show.json").
       with(query: {'screen_name': 'test_user'}).
-      to_return(:status => 200, :body => "{ \"id\": 1 }", :headers => {})
+      to_return(:status => 200, :body => "{ \"id\": 999 }", :headers => {})
 
     WebMock.stub_request(:get, "https://api.twitter.com/1.1/search/tweets.json").
       with(query: {'q': '@test_user', 'count': 10, 'result_type': 'recent'}).

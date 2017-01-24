@@ -7,13 +7,13 @@
       "retweet_count": 1,
       "favorite_count": 2,
       "user": {
-        "name": "User of a test",
+        "name": "User 2",
         "created_at": "Mon Apr 26 06:01:55 +0000 2010",
         "favourites_count": 22,
         "id": 1,
         "followers_count": 23,
         "friends_count": 24,
-        "screen_name": "test_user_updated"
+        "screen_name": "user2"
       },
       "created_at": "Mon Sep 24 03:35:21 +0000 2012"
     }

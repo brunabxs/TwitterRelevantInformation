@@ -3,5 +3,5 @@
 one:
   id: 1
   uid: 1
-  screen_name: test_user
+  screen_name: user
   followers_count: 13

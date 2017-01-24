@@ -13,7 +13,7 @@
         "id": 1011,
         "followers_count": 300,
         "friends_count": 0,
-        "screen_name": "user_1"
+        "screen_name": "user1"
       },
       "created_at": "Mon Sep 24 03:35:21 +0000 2012"
     },
@@ -30,7 +30,7 @@
         "id": 1011,
         "followers_count": 300,
         "friends_count": 0,
-        "screen_name": "user_1"
+        "screen_name": "user1"
       },
       "created_at": "Mon Sep 24 03:35:21 +0000 2012"
     },
@@ -47,7 +47,7 @@
         "id": 1012,
         "followers_count": 350,
         "friends_count": 0,
-        "screen_name": "user_2"
+        "screen_name": "user2"
       },
       "created_at": "Mon Sep 24 03:35:21 +0000 2012"
     },
@@ -64,7 +64,7 @@
         "id": 1012,
         "followers_count": 350,
         "friends_count": 0,
-        "screen_name": "user_2"
+        "screen_name": "user2"
       },
       "created_at": "Mon Sep 24 03:35:21 +0000 2012"
     },
@@ -81,7 +81,7 @@
         "id": 1013,
         "followers_count": 400,
         "friends_count": 0,
-        "screen_name": "user_3"
+        "screen_name": "user3"
       },
       "created_at": "Mon Sep 24 03:35:21 +0000 2012"
     }
