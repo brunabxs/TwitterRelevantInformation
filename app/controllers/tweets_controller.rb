@@ -42,6 +42,9 @@ class TweetsController < ApplicationController
 
   def list
     load(params.fetch(:username), params.fetch(:count, 1))  # TODO: handle 400 response when user prameter is not set
-    @tweets = Tweet.joins(:user).includes(:user)  # TODO: sort the tweets
+    @tweets = Tweet.joins(:user).includes(:user).
+                    order('users.followers_count DESC').
+                    order('retweets_count DESC').
+                    order('likes_count DESC')
   end
 end

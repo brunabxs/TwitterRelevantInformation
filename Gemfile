@@ -49,6 +49,7 @@ group :test do
   # Webmock. Read more: https://github.com/bblimke/webmock
   gem 'webmock', '>= 2.3.2'
   gem 'test-unit'
+  gem 'rails-controller-testing'
 end
 
 # Windows does not include zoneinfo files, so bundle the tzinfo-data gem

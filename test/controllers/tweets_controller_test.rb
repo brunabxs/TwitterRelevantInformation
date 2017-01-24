@@ -121,7 +121,7 @@ class TweetsControllerTest < ActionDispatch::IntegrationTest
     assert_equal 23, user.followers_count
   end
 
-  # Given a response for 'recent tweets of user @test_user' request containing two tweets:
+  # Given a response for 'recent tweets of user @test_user' request containing three tweets:
   #       The tweet "3030" that is a reply to "@test_user" and
   #       The tweet "3031" that is a reply to "@another_user" and
   #       The tweet "3032" that is not a reply
@@ -150,7 +150,6 @@ class TweetsControllerTest < ActionDispatch::IntegrationTest
     assert_equal 1, Tweet.where(uid: "3032").count
   end
 
-
   # Given a response for '10 recent tweets of user @test_user' request
   # When listing the 10 tweets of user "@test_user"
   # Then the response must me 200
@@ -172,5 +171,39 @@ class TweetsControllerTest < ActionDispatch::IntegrationTest
 
     # Assert
     assert_response :success
+  end
+
+  # Given a response for 'recent tweets of user @test_user' request containing some tweets:
+  #       The tweet "3030" that is a tweet with 100 retweets, 10 likes and from a user with 300 followers
+  #       The tweet "3031" that is a tweet with 100 retweets, 15 likes and from a user with 300 followers
+  #       The tweet "3032" that is a tweet with 100 retweets, 10 likes and from a user with 350 followers
+  #       The tweet "3033" that is a tweet with 200 retweets, 10 likes and from a user with 350 followers
+  #       The tweet "3034" that is a tweet with 10 retweets, 2 likes and from a user with 400 followers
+  # When listing the tweets of user "@test_user"
+  # Then the tweets must be in the following order of uid "3034", "3033", "3032", "3031" and "3030"
+  test "should retrieve tweets in a certain order" do
+    # Arrange
+    WebMock.stub_request(:post, "https://api.twitter.com/oauth2/token").
+      to_return(:status => 200, :body => "", :headers => {})
+
+    WebMock.stub_request(:get, "https://api.twitter.com/1.1/users/show.json").
+      with(query: {'screen_name': 'test_user'}).
+      to_return(:status => 200, :body => "{ \"id\": 1 }", :headers => {})
+
+    WebMock.stub_request(:get, "https://api.twitter.com/1.1/search/tweets.json").
+      with(query: {'q': '@test_user', 'count': 10, 'result_type': 'recent'}).
+      to_return(body: file_fixture('twitter_api_response_body_sort.json').read)
+
+    # Act
+    get tweets_list_url, params: {username: "test_user", count: 10}
+
+    # Assert
+    assert_response :success
+    tweets = assigns(:tweets)
+    assert_equal "3034", tweets[0].uid
+    assert_equal "3033", tweets[1].uid
+    assert_equal "3032", tweets[2].uid
+    assert_equal "3031", tweets[3].uid
+    assert_equal "3030", tweets[4].uid
   end
 end
