@@ -1,0 +1,55 @@
+{
+  "statuses": [
+    {
+      "id": 3030,
+      "in_reply_to_user_id": 1,
+      "text": "Text",
+      "retweet_count": 1,
+      "favorite_count": 2,
+      "user": {
+        "name": "User of a test",
+        "created_at": "Mon Apr 26 06:01:55 +0000 2010",
+        "favourites_count": 12,
+        "id": 1,
+        "followers_count": 13,
+        "friends_count": 14,
+        "screen_name": "test_user"
+      },
+      "created_at": "Mon Sep 24 03:35:21 +0000 2012"
+    },
+    {
+      "id": 3031,
+      "in_reply_to_user_id": 231209381203,
+      "text": "Text",
+      "retweet_count": 1,
+      "favorite_count": 2,
+      "user": {
+        "name": "User of a test",
+        "created_at": "Mon Apr 26 06:01:55 +0000 2010",
+        "favourites_count": 12,
+        "id": 1,
+        "followers_count": 13,
+        "friends_count": 14,
+        "screen_name": "test_user"
+      },
+      "created_at": "Mon Sep 24 03:35:21 +0000 2012"
+    },
+    {
+      "id": 3032,
+      "in_reply_to_user_id": null,
+      "text": "Text",
+      "retweet_count": 1,
+      "favorite_count": 2,
+      "user": {
+        "name": "User of a test",
+        "created_at": "Mon Apr 26 06:01:55 +0000 2010",
+        "favourites_count": 12,
+        "id": 1,
+        "followers_count": 13,
+        "friends_count": 14,
+        "screen_name": "test_user"
+      },
+      "created_at": "Mon Sep 24 03:35:21 +0000 2012"
+    }
+  ]
+}

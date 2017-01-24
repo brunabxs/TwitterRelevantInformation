@@ -7,8 +7,10 @@ class TweetsController < ApplicationController
   end
 
   def load(username, tweets_count)
+    search_user = twitter_client.user(username)
     twitter_client.search("@#{username}", {result_type: "recent", count: tweets_count}).collect do |api_tweet|
-      # TODO: apply logic to select just the relevant tweets
+      next if "#{api_tweet.in_reply_to_user_id}" == "#{search_user.id}"
+
       unless user = User.where(uid: "#{api_tweet.user.id}").first
         user = User.create do |user|
           user.uid = "#{api_tweet.user.id}"
