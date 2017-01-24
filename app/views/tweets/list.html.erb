@@ -1,2 +1,18 @@
-<h1>Tweets#list</h1>
-<p>Find me in app/views/tweets/list.html.erb</p>
+<h1>Listing tweets</h1> 
+<table>
+  <tr>
+    <th>Text</th>
+    <th>Retweets</th>
+    <th>Likes</th>
+    <th>Creation date</th>
+  </tr>
+ 
+  <% @tweets.each do |tweet| %>
+    <tr>
+      <td><%= tweet.text %></td>
+      <td><%= tweet.retweets_count %></td>
+      <td><%= tweet.likes_count %></td>
+      <td><%= tweet.creation_date.strftime("%Y-%m-%d %H:%M") %></td>
+    </tr>
+  <% end %>
+</table>

@@ -1,0 +1,9 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  uid: 123
+  retweets_count: 1
+  likes_count: 2
+  creation_date: 2017-01-24 17:17:33
+  text: Text
+
