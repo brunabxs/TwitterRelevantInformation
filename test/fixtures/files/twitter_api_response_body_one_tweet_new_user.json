@@ -4,16 +4,16 @@
       "id": 250075927172759552,
       "in_reply_to_user_id": null,
       "text": "The tweet text",
-      "retweet_count": 10,
-      "favorite_count": 11,
+      "retweet_count": 20,
+      "favorite_count": 21,
       "user": {
-        "name": "User of a test",
+        "name": "User of a test 2",
         "created_at": "Mon Apr 26 06:01:55 +0000 2010",
-        "favourites_count": 12,
-        "id": 1,
-        "followers_count": 13,
-        "friends_count": 14,
-        "screen_name": "test_user"
+        "favourites_count": 22,
+        "id": 2500,
+        "followers_count": 23,
+        "friends_count": 24,
+        "screen_name": "test_user2"
       },
       "created_at": "Mon Sep 24 03:35:21 +0000 2012"
     }

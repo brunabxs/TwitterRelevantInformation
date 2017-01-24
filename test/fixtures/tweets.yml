@@ -6,4 +6,5 @@ one:
   likes_count: 2
   creation_date: 2017-01-24 17:17:33
   text: Text
+  user_id: 1
 

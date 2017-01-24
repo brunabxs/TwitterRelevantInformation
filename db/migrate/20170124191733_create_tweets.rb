@@ -1,6 +1,7 @@
 class CreateTweets < ActiveRecord::Migration[5.0]
   def change
     create_table :tweets do |t|
+      t.belongs_to :user
       t.string :uid
       t.integer :retweets_count
       t.integer :likes_count

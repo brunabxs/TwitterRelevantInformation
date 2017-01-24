@@ -1,6 +1,8 @@
 <h1>Listing tweets</h1> 
 <table>
   <tr>
+    <th>User</th>
+    <th>Followers</th>
     <th>Text</th>
     <th>Retweets</th>
     <th>Likes</th>
@@ -9,6 +11,8 @@
  
   <% @tweets.each do |tweet| %>
     <tr>
+      <td><%= tweet.user.screen_name %></td>
+      <td><%= tweet.user.followers_count %></td>
       <td><%= tweet.text %></td>
       <td><%= tweet.retweets_count %></td>
       <td><%= tweet.likes_count %></td>
