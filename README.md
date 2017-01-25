@@ -22,7 +22,7 @@ See more on Gemfile.
 ## Development (Windows 10)
 ### Running the application
 - Go to the project's root directory.
-- Setup the environment variables. Their values must be set with Twitter API Key and Twitter API Secret. If you do not want to set those variables, you can open ```config/secrets.yml``` and set ```twitter_api_key``` and ```twitter_api_secret``` values.
+- Setup the environment variables. Their values must be set with [Twitter API Key and Twitter API Secret](https://github.com/brunabxs/TwitterRelevantInformation/wiki/How-to-retrieve-the-Twitter-API-Key-and-Twitter-API-Secret). If you do not want to set those variables, you can open ```config/secrets.yml``` and set ```twitter_api_key``` and ```twitter_api_secret``` values.
 ```
 TWITTER_API_KEY=djsdkjasbdkjasbdkasgdkasbdbs
 TWITTER_API_SECRET=kljfkldjfkldsjfkldsjkfljdslkfjsflsdkfjs
