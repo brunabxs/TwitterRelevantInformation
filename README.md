@@ -1,5 +1,7 @@
 # Twitter Relevant Information
 
+[![Build Status](https://travis-ci.org/brunabxs/TwitterRelevantInformation.svg?branch=master)](https://travis-ci.org/brunabxs/TwitterRelevantInformation)
+
 Can you tell which are the most relevant tweets for a given user? And the most relevant users?
 A relevant tweet is a tweet that mentions a certain user. Also, it cannot be a reply to the user's tweet.
 
@@ -12,7 +14,8 @@ They are sorted by importance:
 ## What did we use?
 - [Ruby (v2.3.3)](http://www.ruby-lang.org/en/)
 - [Ruby on Rails (v5.0.1)](http://rubyonrails.org/)
-- [Twitter API (6.1.0)](https://github.com/sferik/twitter)
+- [Twitter API (v6.1.0)](https://github.com/sferik/twitter)
+- [Travis CS](https://travis-ci.org)
 
 See more on Gemfile.
 
