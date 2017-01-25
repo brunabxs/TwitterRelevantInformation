@@ -2,6 +2,7 @@ language: ruby
 rvm:
 - 2.3.0
 before_install:
+  - rm Gemfile.lock
   - gem update
   - gem install bundler
 script:
