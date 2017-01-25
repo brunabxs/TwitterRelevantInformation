@@ -1,16 +1,32 @@
 class TweetsController < ApplicationController
-  def twitter_client
-    @twitter_client ||= Twitter::REST::Client.new do |config|
-      config.consumer_key        = Rails.application.secrets.twitter_api_key
-      config.consumer_secret     = Rails.application.secrets.twitter_api_secret
-    end
+  TWITTER_COUNT = 30
+
+  def list
+    load_tweets_from_twitter(Rails.application.secrets.username, TWITTER_COUNT)  # TODO: handle 400 response when user prameter is not set
+    @tweets = Tweet.joins(:user).includes(:user).
+                    order('users.followers_count DESC').
+                    order('retweets_count DESC').
+                    order('likes_count DESC')
   end
 
-  def load(username, tweets_count)
-    search_user = twitter_client.user(username)
-    twitter_client.search("@#{username}", {result_type: "recent", count: tweets_count}).collect do |api_tweet|
-      next if "#{api_tweet.in_reply_to_user_id}" == "#{search_user.id}"
+  private
+    def load_tweets_from_twitter(username, tweets_count)
+      search_user = twitter_client.user(username)
+      twitter_client.search("@#{username}", {result_type: "recent", count: tweets_count}).collect do |api_tweet|
+        next if "#{api_tweet.in_reply_to_user_id}" == "#{search_user.id}"
+        user = create_or_update_user(api_tweet)
+        tweet = create_or_update_tweet(api_tweet, user)
+      end
+    end
 
+    def twitter_client
+      @twitter_client ||= Twitter::REST::Client.new do |config|
+        config.consumer_key        = Rails.application.secrets.twitter_api_key
+        config.consumer_secret     = Rails.application.secrets.twitter_api_secret
+      end
+    end
+
+    def create_or_update_user(api_tweet)
       unless user = User.where(uid: "#{api_tweet.user.id}").first
         user = User.create do |user|
           user.uid = "#{api_tweet.user.id}"
@@ -22,7 +38,10 @@ class TweetsController < ApplicationController
         user.followers_count = api_tweet.user.followers_count
         user.save
       end
+      user
+    end
 
+    def create_or_update_tweet(api_tweet, user)
       unless tweet = Tweet.where(uid: "#{api_tweet.id}").first
         tweet = Tweet.create do |tweet|
           tweet.uid = "#{api_tweet.id}"
@@ -37,14 +56,6 @@ class TweetsController < ApplicationController
         tweet.likes_count = api_tweet.favorite_count
         tweet.save
       end
+      tweet
     end
-  end
-
-  def list
-    load(params.fetch(:username), params.fetch(:count, 1))  # TODO: handle 400 response when user prameter is not set
-    @tweets = Tweet.joins(:user).includes(:user).
-                    order('users.followers_count DESC').
-                    order('retweets_count DESC').
-                    order('likes_count DESC')
-  end
 end

@@ -13,15 +13,15 @@ class TweetsControllerTest < ActionDispatch::IntegrationTest
       to_return(:status => 200, :body => "", :headers => {})
 
     WebMock.stub_request(:get, "https://api.twitter.com/1.1/users/show.json").
-      with(query: {'screen_name': 'test_user'}).
+      with(query: {'screen_name': Rails.application.secrets.username}).
       to_return(:status => 200, :body => "{ \"id\": 999 }", :headers => {})
 
     WebMock.stub_request(:get, "https://api.twitter.com/1.1/search/tweets.json").
-      with(query: {'q': '@test_user', 'count': 1, 'result_type': 'recent'}).
+      with(query: {'q': '@'+Rails.application.secrets.username, 'count': TweetsController::TWITTER_COUNT, 'result_type': 'recent'}).
       to_return(body: file_fixture('twitter_api_response_body_one_tweet.json').read)
 
     # Act
-    get tweets_list_url, params: {username: "test_user"}
+    get tweets_list_url
 
     # Assert
     assert_response :success
@@ -42,15 +42,15 @@ class TweetsControllerTest < ActionDispatch::IntegrationTest
       to_return(:status => 200, :body => "", :headers => {})
 
     WebMock.stub_request(:get, "https://api.twitter.com/1.1/users/show.json").
-      with(query: {'screen_name': 'test_user'}).
+      with(query: {'screen_name': Rails.application.secrets.username}).
       to_return(:status => 200, :body => "{ \"id\": 999}", :headers => {})
 
     WebMock.stub_request(:get, "https://api.twitter.com/1.1/search/tweets.json").
-      with(query: {'q': '@test_user', 'count': 1, 'result_type': 'recent'}).
+      with(query: {'q': '@'+Rails.application.secrets.username, 'count': TweetsController::TWITTER_COUNT, 'result_type': 'recent'}).
       to_return(body: file_fixture('twitter_api_response_body_one_tweet_new_user.json').read)
 
     # Act
-    get tweets_list_url, params: {username: "test_user"}
+    get tweets_list_url
 
     # Assert
     assert_response :success
@@ -72,15 +72,15 @@ class TweetsControllerTest < ActionDispatch::IntegrationTest
       to_return(:status => 200, :body => "", :headers => {})
 
     WebMock.stub_request(:get, "https://api.twitter.com/1.1/users/show.json").
-      with(query: {'screen_name': 'test_user'}).
+      with(query: {'screen_name': Rails.application.secrets.username}).
       to_return(:status => 200, :body => "{ \"id\": 999 }", :headers => {})
 
     WebMock.stub_request(:get, "https://api.twitter.com/1.1/search/tweets.json").
-      with(query: {'q': '@test_user', 'count': 1, 'result_type': 'recent'}).
+      with(query: {'q': '@'+Rails.application.secrets.username, 'count': TweetsController::TWITTER_COUNT, 'result_type': 'recent'}).
       to_return(body: file_fixture('twitter_api_response_body_one_tweet_update_tweet.json').read)
 
     # Act
-    get tweets_list_url, params: {username: "test_user"}
+    get tweets_list_url
 
     # Assert
     assert_response :success
@@ -102,15 +102,15 @@ class TweetsControllerTest < ActionDispatch::IntegrationTest
       to_return(:status => 200, :body => "", :headers => {})
 
     WebMock.stub_request(:get, "https://api.twitter.com/1.1/users/show.json").
-      with(query: {'screen_name': 'test_user'}).
+      with(query: {'screen_name': Rails.application.secrets.username}).
       to_return(:status => 200, :body => "{ \"id\": 999 }", :headers => {})
 
     WebMock.stub_request(:get, "https://api.twitter.com/1.1/search/tweets.json").
-      with(query: {'q': '@test_user', 'count': 1, 'result_type': 'recent'}).
+      with(query: {'q': '@'+Rails.application.secrets.username, 'count': TweetsController::TWITTER_COUNT, 'result_type': 'recent'}).
       to_return(body: file_fixture('twitter_api_response_body_one_tweet_update_user.json').read)
 
     # Act
-    get tweets_list_url, params: {username: "test_user"}
+    get tweets_list_url
 
     # Assert
     assert_response :success
@@ -133,44 +133,21 @@ class TweetsControllerTest < ActionDispatch::IntegrationTest
       to_return(:status => 200, :body => "", :headers => {})
 
     WebMock.stub_request(:get, "https://api.twitter.com/1.1/users/show.json").
-      with(query: {'screen_name': 'test_user'}).
+      with(query: {'screen_name': Rails.application.secrets.username}).
       to_return(:status => 200, :body => "{ \"id\": 999 }", :headers => {})
 
     WebMock.stub_request(:get, "https://api.twitter.com/1.1/search/tweets.json").
-      with(query: {'q': '@test_user', 'count': 10, 'result_type': 'recent'}).
+      with(query: {'q': '@'+Rails.application.secrets.username, 'count': TweetsController::TWITTER_COUNT, 'result_type': 'recent'}).
       to_return(body: file_fixture('twitter_api_response_body_reply_tweets.json').read)
 
     # Act
-    get tweets_list_url, params: {username: "test_user", count: 10}
+    get tweets_list_url
 
     # Assert
     assert_response :success
     assert_equal 0, Tweet.where(uid: "3030").count
     assert_equal 1, Tweet.where(uid: "3031").count
     assert_equal 1, Tweet.where(uid: "3032").count
-  end
-
-  # Given a response for '10 recent tweets mentioning user @test_user' request
-  # When listing the 10 tweets that mention user "@test_user"
-  # Then the response must me 200
-  test "should consider username and count request parameters" do
-    # Arrange
-    WebMock.stub_request(:post, "https://api.twitter.com/oauth2/token").
-      to_return(:status => 200, :body => "", :headers => {})
-
-    WebMock.stub_request(:get, "https://api.twitter.com/1.1/users/show.json").
-      with(query: {'screen_name': 'test_user'}).
-      to_return(:status => 200, :body => "{ \"id\": 999 }", :headers => {})
-
-    WebMock.stub_request(:get, "https://api.twitter.com/1.1/search/tweets.json").
-      with(query: {'q': '@test_user', 'count': 10, 'result_type': 'recent'}).
-      to_return(body: file_fixture('twitter_api_response_body_one_tweet.json').read)
-
-    # Act
-    get tweets_list_url, params: {username: "test_user", count: 10}
-
-    # Assert
-    assert_response :success
   end
 
   # Given a response for 'recent tweets mentioning user @test_user' request containing some tweets:
@@ -187,15 +164,15 @@ class TweetsControllerTest < ActionDispatch::IntegrationTest
       to_return(:status => 200, :body => "", :headers => {})
 
     WebMock.stub_request(:get, "https://api.twitter.com/1.1/users/show.json").
-      with(query: {'screen_name': 'test_user'}).
+      with(query: {'screen_name': Rails.application.secrets.username}).
       to_return(:status => 200, :body => "{ \"id\": 999 }", :headers => {})
 
     WebMock.stub_request(:get, "https://api.twitter.com/1.1/search/tweets.json").
-      with(query: {'q': '@test_user', 'count': 10, 'result_type': 'recent'}).
+      with(query: {'q': '@'+Rails.application.secrets.username, 'count': TweetsController::TWITTER_COUNT, 'result_type': 'recent'}).
       to_return(body: file_fixture('twitter_api_response_body_sort.json').read)
 
     # Act
-    get tweets_list_url, params: {username: "test_user", count: 10}
+    get tweets_list_url
 
     # Assert
     assert_response :success
