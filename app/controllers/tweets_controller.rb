@@ -7,6 +7,12 @@ class TweetsController < ApplicationController
                     order('users.followers_count DESC').
                     order('retweets_count DESC').
                     order('likes_count DESC')
+    @users = User.select('screen_name, followers_count, SUM(tweets.retweets_count) as `total_retweets_count`, SUM(tweets.likes_count) as `total_likes_count`').
+                  joins(:tweets).
+                  group([:screen_name, :followers_count]).
+                  order('followers_count DESC').
+                  order('total_retweets_count DESC').
+                  order('total_likes_count DESC')
   end
 
   private

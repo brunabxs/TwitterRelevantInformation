@@ -183,4 +183,45 @@ class TweetsControllerTest < ActionDispatch::IntegrationTest
     assert_equal "3031", tweets[3].uid
     assert_equal "3030", tweets[4].uid
   end
+
+  # Given a response for 'recent tweets mentioning user @test_user' request containing some tweets:
+  #       The tweet "3030" that is a tweet with 100 retweets, 10 likes and from 'user1' with 300 followers
+  #       The tweet "3031" that is a tweet with 100 retweets, 15 likes and from 'user1' with 300 followers
+  #       The tweet "3032" that is a tweet with 100 retweets, 10 likes and from 'user2' with 350 followers
+  #       The tweet "3033" that is a tweet with 200 retweets, 10 likes and from 'user2' with 350 followers
+  #       The tweet "3034" that is a tweet with 10 retweets, 2 likes and from 'user3' with 400 followers
+  # When listing the users that mention user "@test_user"
+  # Then the users must be in the following order "user3", "user2", "user1"
+  test "should retrieve users in a certain order" do
+    # Arrange
+    WebMock.stub_request(:post, "https://api.twitter.com/oauth2/token").
+      to_return(:status => 200, :body => "", :headers => {})
+
+    WebMock.stub_request(:get, "https://api.twitter.com/1.1/users/show.json").
+      with(query: {'screen_name': Rails.application.secrets.username}).
+      to_return(:status => 200, :body => "{ \"id\": 999 }", :headers => {})
+
+    WebMock.stub_request(:get, "https://api.twitter.com/1.1/search/tweets.json").
+      with(query: {'q': '@'+Rails.application.secrets.username, 'count': TweetsController::TWITTER_COUNT, 'result_type': 'recent'}).
+      to_return(body: file_fixture('twitter_api_response_body_sort.json').read)
+
+    # Act
+    get tweets_list_url
+
+    # Assert
+    assert_response :success
+    users = assigns(:users)
+    assert_equal "user3", users[0].screen_name
+    assert_equal 400, users[0].followers_count
+    assert_equal 10, users[0].total_retweets_count
+    assert_equal 2, users[0].total_likes_count
+    assert_equal "user2", users[1].screen_name
+    assert_equal 350, users[1].followers_count
+    assert_equal 300, users[1].total_retweets_count
+    assert_equal 20, users[1].total_likes_count
+    assert_equal "user1", users[2].screen_name
+    assert_equal 300, users[2].followers_count
+    assert_equal 200, users[2].total_retweets_count
+    assert_equal 25, users[2].total_likes_count
+  end
 end

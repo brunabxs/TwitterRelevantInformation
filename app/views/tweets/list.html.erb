@@ -1,3 +1,22 @@
+<h1>Listing users</h1> 
+<table>
+  <tr>
+    <th>User</th>
+    <th>Total Followers</th>
+    <th>Total Retweets</th>
+    <th>Total Likes</th>
+  </tr>
+ 
+  <% @users.each do |user| %>
+    <tr>
+      <td><%= link_to_twitter_user(user) %></td>
+      <td><%= user.followers_count %></td>
+      <td><%= user.total_retweets_count %></td>
+      <td><%= user.total_likes_count %></td>
+    </tr>
+  <% end %>
+</table>
+
 <h1>Listing tweets</h1> 
 <table>
   <tr>
