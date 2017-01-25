@@ -1,41 +1,49 @@
-<h1>Listing users</h1> 
-<table>
-  <tr>
-    <th>User</th>
-    <th>Total Followers</th>
-    <th>Total Retweets</th>
-    <th>Total Likes</th>
-  </tr>
- 
-  <% @users.each do |user| %>
-    <tr>
-      <td><%= link_to_twitter_user(user) %></td>
-      <td><%= user.followers_count %></td>
-      <td><%= user.total_retweets_count %></td>
-      <td><%= user.total_likes_count %></td>
-    </tr>
-  <% end %>
-</table>
+<div id="tabs">
+  <ul>
+    <li><a href="#tabs-1">Tweets</a></li>
+    <li><a href="#tabs-2">Users</a></li>
+  </ul>
+  <div id="tabs-1">
+    <table>
+      <tr>
+        <th>User</th>
+        <th>Followers</th>
+        <th>Text</th>
+        <th>Retweets</th>
+        <th>Likes</th>
+        <th>Creation date</th>
+      </tr>
+    
+      <% @tweets.each do |tweet| %>
+        <tr>
+          <td class="text"><%= link_to_twitter_user(tweet.user) %></td>
+          <td class="number"><%= tweet.user.followers_count %></td>
+          <td class="text"><%= link_to_twitter_tweet(tweet) %></td>
+          <td class="number"><%= tweet.retweets_count %></td>
+          <td class="number"><%= tweet.likes_count %></td>
+          <td class="date"><%= tweet.creation_date.strftime("%Y-%m-%d %H:%M") %></td>
+        </tr>
+      <% end %>
+    </table>
+  </div>
+  <div id="tabs-2">
+    <table>
+      <tr>
+        <th>User</th>
+        <th>Total Followers</th>
+        <th>Total Retweets</th>
+        <th>Total Likes</th>
+      </tr>
+    
+      <% @users.each do |user| %>
+        <tr>
+          <td class="text"><%= link_to_twitter_user(user) %></td>
+          <td class="number"><%= user.followers_count %></td>
+          <td class="number"><%= user.total_retweets_count %></td>
+          <td class="number"><%= user.total_likes_count %></td>
+        </tr>
+      <% end %>
+    </table>
+  </div>
 
-<h1>Listing tweets</h1> 
-<table>
-  <tr>
-    <th>User</th>
-    <th>Followers</th>
-    <th>Text</th>
-    <th>Retweets</th>
-    <th>Likes</th>
-    <th>Creation date</th>
-  </tr>
- 
-  <% @tweets.each do |tweet| %>
-    <tr>
-      <td><%= link_to_twitter_user(tweet.user) %></td>
-      <td><%= tweet.user.followers_count %></td>
-      <td><%= link_to_twitter_tweet(tweet) %></td>
-      <td><%= tweet.retweets_count %></td>
-      <td><%= tweet.likes_count %></td>
-      <td><%= tweet.creation_date.strftime("%Y-%m-%d %H:%M") %></td>
-    </tr>
-  <% end %>
-</table>
+</div>
