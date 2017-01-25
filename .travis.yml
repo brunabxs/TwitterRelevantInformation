@@ -5,6 +5,7 @@ before_install:
   - rm Gemfile.lock
   - gem update
   - gem install bundler
+  - chmod u+x bin/rails
 script:
   - bin/rails db:migrate RAILS_ENV=test
   - bin/rails test
